@@ -216,7 +216,24 @@ const RepoDetail = () => {
               <Link to={`/${ownerUsername}`} className="text-accent hover:underline">{ownerUsername}</Link>
               <span>/</span>
               <span className="font-semibold text-foreground">{repo.name}</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-border">{repo.is_public ? "Public" : "Private"}</span>
+              {isOwner ? (
+                <button
+                  onClick={async () => {
+                    const newVal = !repo.is_public;
+                    const { error } = await supabase.from("repositories").update({ is_public: newVal }).eq("id", repo.id);
+                    if (!error) {
+                      setRepo({ ...repo, is_public: newVal });
+                      toast({ title: `Repository is now ${newVal ? "Public" : "Private"}` });
+                    }
+                  }}
+                  className="text-[10px] px-1.5 py-0.5 rounded-full border border-border hover:bg-secondary/50 transition-colors cursor-pointer"
+                  title="Click to toggle visibility"
+                >
+                  {repo.is_public ? "Public" : "Private"}
+                </button>
+              ) : (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-border">{repo.is_public ? "Public" : "Private"}</span>
+              )}
             </div>
             {repo.description && <p className="text-sm text-muted-foreground">{repo.description}</p>}
           </div>

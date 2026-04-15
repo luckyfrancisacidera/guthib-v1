@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { BookOpen, Pencil, Eye, Save } from "lucide-react";
+import DOMPurify from "dompurify";
 
 interface ReadmeEditorProps {
   repoId: string;
@@ -138,7 +139,7 @@ const ReadmeEditor = ({ repoId, branchId, isOwner, userId }: ReadmeEditorProps) 
             </Button>
           </div>
           {preview ? (
-            <div className="p-4 prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: renderMarkdown(draft) }} />
+            <div className="p-4 prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderMarkdown(draft)) }} />
           ) : (
             <Textarea
               value={draft}
@@ -155,7 +156,7 @@ const ReadmeEditor = ({ repoId, branchId, isOwner, userId }: ReadmeEditorProps) 
           </div>
         </div>
       ) : (
-        <div className="p-4 prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: renderMarkdown(content || "") }} />
+        <div className="p-4 prose prose-sm max-w-none text-foreground" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(renderMarkdown(content || "")) }} />
       )}
     </div>
   );

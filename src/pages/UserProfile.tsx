@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import ProfileListModal from "@/components/ProfileListModal";
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -29,6 +30,7 @@ const UserProfile = () => {
   const [form, setForm] = useState({ full_name: "", bio: "", location: "", website: "" });
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [listModal, setListModal] = useState<"followers" | "following" | "repositories" | null>(null);
 
   const fetchFollowCounts = async (profileId: string) => {
     const [{ count: followers }, { count: following }] = await Promise.all([
@@ -53,7 +55,11 @@ const UserProfile = () => {
           location: profileData.location || "",
           website: profileData.website || "",
         });
-        const { data: repoData } = await supabase.from("repositories").select("*").eq("owner_id", profileData.id).eq("is_public", true).order("updated_at", { ascending: false });
+        let repoQuery = supabase.from("repositories").select("*").eq("owner_id", profileData.id).order("updated_at", { ascending: false });
+        if (!user || user.id !== profileData.id) {
+          repoQuery = repoQuery.eq("is_public", true);
+        }
+        const { data: repoData } = await repoQuery;
         setRepos(repoData || []);
         fetchFollowCounts(profileData.id);
       }
@@ -105,9 +111,9 @@ const UserProfile = () => {
               <p className="flex items-center gap-2"><Calendar className="w-4 h-4" />Joined {new Date(profile.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</p>
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <span className="flex items-center gap-1"><Users className="w-4 h-4" /><strong>{followerCount}</strong> followers</span>
+              <button onClick={() => setListModal("followers")} className="flex items-center gap-1 hover:text-accent transition-colors cursor-pointer"><Users className="w-4 h-4" /><strong>{followerCount}</strong> followers</button>
               <span>·</span>
-              <span><strong>{followingCount}</strong> following</span>
+              <button onClick={() => setListModal("following")} className="hover:text-accent transition-colors cursor-pointer"><strong>{followingCount}</strong> following</button>
             </div>
             {!isOwnProfile && (
               <FollowButton targetUserId={profile.id} onFollowChange={() => fetchFollowCounts(profile.id)} />
@@ -128,13 +134,18 @@ const UserProfile = () => {
           <div className="lg:col-span-3 space-y-6 min-w-0">
             <ContributionGraph userId={profile.id} />
             <PinnedRepositories profileId={profile.id} username={profile.username} />
-            <h2 className="font-display font-semibold mb-4">Public repositories ({repos.length})</h2>
+            <button onClick={() => setListModal("repositories")} className="font-display font-semibold mb-4 hover:text-accent transition-colors cursor-pointer text-left">Repositories ({repos.length})</button>
             <div className="space-y-0 border border-border rounded-lg overflow-hidden">
               {repos.length === 0 ? (
-                <div className="p-8 text-center text-sm text-muted-foreground">No public repositories</div>
+                <div className="p-8 text-center text-sm text-muted-foreground">No repositories</div>
               ) : repos.map((repo) => (
                 <div key={repo.id} className="p-4 border-b border-border last:border-b-0 hover:bg-secondary/30">
-                  <Link to={`/${username}/${repo.name}`} className="text-accent font-semibold hover:underline text-sm">{repo.name}</Link>
+                  <div className="flex items-center gap-2">
+                    <Link to={`/${username}/${repo.name}`} className="text-accent font-semibold hover:underline text-sm">{repo.name}</Link>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-full border border-border text-muted-foreground">
+                      {repo.is_public ? "Public" : "Private"}
+                    </span>
+                  </div>
                   {repo.description && <p className="text-xs text-muted-foreground mt-1">{repo.description}</p>}
                   <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
                     {repo.language && <span>{repo.language}</span>}
@@ -147,6 +158,16 @@ const UserProfile = () => {
         </div>
         </div>
       </div>
+
+      {profile && (
+        <ProfileListModal
+          open={listModal !== null}
+          onOpenChange={(open) => !open && setListModal(null)}
+          profileId={profile.id}
+          type={listModal || "followers"}
+          username={profile.username}
+        />
+      )}
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="sm:max-w-md">
