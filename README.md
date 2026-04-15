@@ -186,7 +186,6 @@ git push origin master
 ## 📌 Future Improvements
 
 - [ ] Real-time collaboration features
-- [ ] Mobile app version
 - [ ] AI-powered task suggestions
 - [ ] Notification system
 - [ ] Advanced analytics dashboard
