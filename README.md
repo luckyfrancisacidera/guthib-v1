@@ -1,6 +1,8 @@
 # 🚀 Guthib V1
 
-A modern gamified productivity and task management platform inspired by GitHub activity systems.  
+A gamified task management platform where productivity meets play. Complete tasks,
+level up, unlock rewards, and track your activity streaks — built for people who
+want to make getting things done actually fun.
 Built with React (Vite), Tailwind CSS, and Supabase using a serverless architecture and deployed on Vercel.
 
 ## 🌐 Live Demo
