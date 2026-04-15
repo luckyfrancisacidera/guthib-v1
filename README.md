@@ -11,16 +11,29 @@ Built with React (Vite), Tailwind CSS, and Supabase using a serverless architect
 
 ## 📸 Preview
 
-| Page | Screenshot |
-|------|-----------|
-| 🏠 Landing Page | ![Landing Page](./public/images/landing-page.png) |
-| 🏠 Home Page | ![Home Page](./public/images/home.png) |
-| 🔐 Authentication | ![Authentication](./public/images/auth-page.png) |
-| 🗂️ Task Board | ![Task Board](./public/images/task-board.png) |
-| 🐙 Activity System | ![GitHub System](./public/images/github.png) |
-| 🏆 Leaderboard | ![Leaderboard](./public/images/leaderboard.png) |
-| 🛒 Shop | ![Shop](./public/images/shop.png) |
-| 👤 Profile | ![Profile](./public/images/profile-page.png) |
+### 🏠 Landing Page
+![Landing Page](./public/images/landing-page.png)
+
+### 🏠 Home Page
+![Home Page](./public/images/home.png)
+
+### 🔐 Authentication Page
+![Authentication](./public/images/auth-page.png)
+
+### 🗂️ Task Board
+![Task Board](./public/images/task-board.png)
+
+### 🐙 GitHub-like Activity System
+![GitHub System](./public/images/github.png)
+
+### 🏆 Leaderboard
+![Leaderboard](./public/images/leaderboard.png)
+
+### 🛒 Shop System
+![Shop](./public/images/shop.png)
+
+### 👤 Profile Page
+![Profile](./public/images/profile-page.png)
 
 ---
 
