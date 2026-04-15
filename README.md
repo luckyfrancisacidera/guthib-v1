@@ -1,103 +1,71 @@
 # 🚀 Guthib V1
 
 A modern gamified productivity and task management platform inspired by GitHub activity systems.  
-Built with React (Vite), Tailwind CSS, and Supabase in a serverless architecture and deployed on Vercel.
-
----
+Built with React (Vite), Tailwind CSS, and Supabase using a serverless architecture and deployed on Vercel.
 
 ## 🌐 Live Demo
 
-👉 https://guthib-v1.vercel.app/
+👉 [https://guthib-v1.vercel.app/](https://guthib-v1.vercel.app/)
 
 ---
 
 ## 📸 Preview
 
-> All screenshots are stored in `/public/images`
-
-### 🏠 Landing Page
-![Landing Page](./public/images/landing-page.png)
-
-### 🏠 Home Page
-![Home](./public/images/home.png)
-
-### 🔐 Authentication Page
-![Authentication](./public/images/auth-page.png)
-
-### 🗂️ Task Board
-![Task Board](./public/images/task-board.png)
-
-### 🐙 GitHub-like Activity System
-![GitHub System](./public/images/github.png)
-
-### 🏆 Leaderboard
-![Leaderboard](./public/images/leaderboard.png)
-
-### 🛒 Shop System
-![Shop](./public/images/shop.png)
-
-### 👤 Profile Page
-![Profile](./public/images/profile-page.png)
+| Page | Screenshot |
+|------|-----------|
+| 🏠 Landing Page | ![Landing Page](./public/images/landing-page.png) |
+| 🏠 Home Page | ![Home Page](./public/images/home.png) |
+| 🔐 Authentication | ![Authentication](./public/images/auth-page.png) |
+| 🗂️ Task Board | ![Task Board](./public/images/task-board.png) |
+| 🐙 Activity System | ![GitHub System](./public/images/github.png) |
+| 🏆 Leaderboard | ![Leaderboard](./public/images/leaderboard.png) |
+| 🛒 Shop | ![Shop](./public/images/shop.png) |
+| 👤 Profile | ![Profile](./public/images/profile-page.png) |
 
 ---
 
 ## ✨ Features
 
 ### 🔐 Authentication System
-- Secure login and signup using Supabase Auth
-- Persistent user sessions
+- Secure login and signup via Supabase Auth
+- Persistent sessions
 - Protected routes
 
----
-
-### 🗂️ Task Board System
-- Create, update, delete tasks
-- Organized workflow (To Do / In Progress / Done)
+### 🗂️ Task Board
+- Create, update, and delete tasks
+- Organized workflow: **To Do → In Progress → Done**
 - Responsive and interactive UI
-
----
 
 ### 🐙 GitHub-like Activity System
 - Contribution-style activity tracking
-- User engagement history
-- Visual progress representation
-
----
+- User activity history visualization
+- Engagement-based system
 
 ### 🏆 Gamified Ecosystem
 - XP and leveling system
-- Leaderboard ranking system
-- Reward-based engagement loop
-
----
+- Leaderboard rankings
+- Reward-based progression
 
 ### 🛒 Shop System
 - Redeem XP for rewards
-- In-app gamified economy
-- Unlockable items/features
-
----
+- Virtual economy
+- Unlockable items and perks
 
 ### 👤 Profile System
 - Editable user profile
 - User stats dashboard
-- Personalized settings/customization
-
----
+- Customization options
 
 ### ☁️ Backend (Serverless)
-- Supabase integration
-  - PostgreSQL database
-  - Authentication
-  - Storage
-  - Real-time updates
+- Supabase integration: Authentication, PostgreSQL, Storage, and Real-time updates
 
 ---
 
-### 🚀 Deployment
-- Hosted on Vercel
-- CI/CD via GitHub integration
-- Environment-based configuration
+## 📱 Responsive Design
+
+- Fully mobile-friendly
+- Optimized for tablets and phones
+- Adaptive layout for all screen sizes
 
 ---
 
@@ -113,16 +81,8 @@ Built with React (Vite), Tailwind CSS, and Supabase in a serverless architecture
 - Recharts
 - Lucide React Icons
 
----
-
 ### Backend (Serverless)
-- Supabase
-  - Auth
-  - PostgreSQL Database
-  - Storage
-  - Real-time subscriptions
-
----
+- Supabase — Auth, PostgreSQL, Storage, Real-time subscriptions
 
 ### Deployment
 - Vercel
@@ -131,7 +91,86 @@ Built with React (Vite), Tailwind CSS, and Supabase in a serverless architecture
 
 ## 📦 Installation
 
-### 1. Clone repository
+### 1. Install dependencies
+
 ```bash
-git clone https://github.com/your-username/guthib-v1.git
-cd guthib-v1
+npm install
+```
+
+### 2. Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+> Get these from: **Supabase → Project Settings → API**
+
+### 3. Run development server
+
+```bash
+npm run dev
+```
+
+App runs at `http://localhost:8080/`
+
+---
+
+## 🧪 Build & Preview
+
+```bash
+# Production build
+npm run build
+
+# Preview build locally
+npm run preview
+```
+
+---
+
+## 🔄 Git Workflow
+
+If Git rejects your push:
+
+```bash
+npm install
+git pull origin master --rebase
+git push origin master
+```
+
+---
+
+## 🚀 Deployment (Vercel)
+
+1. Push to GitHub:
+
+```bash
+git add .
+git commit -m "update"
+git push origin master
+```
+
+2. Go to [https://vercel.com](https://vercel.com) and import your repository.
+
+3. Configure settings:
+   - **Framework:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+
+4. Add environment variables:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+
+5. Deploy 🚀
+
+---
+
+## 📌 Future Improvements
+
+- [ ] Real-time collaboration features
+- [ ] Mobile app version
+- [ ] AI-powered task suggestions
+- [ ] Notification system
+- [ ] Advanced analytics dashboard
