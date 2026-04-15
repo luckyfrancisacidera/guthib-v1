@@ -1,0 +1,99 @@
+
+CREATE OR REPLACE FUNCTION public.award_task_xp(
+  _task_id uuid,
+  _submitter_id uuid,
+  _xp_amount integer
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_today date := current_date;
+  v_existing record;
+  v_new_xp integer;
+  v_new_level integer;
+  v_new_streak integer;
+  v_yesterday date := current_date - 1;
+BEGIN
+  -- Prevent double award: check task not already xp_awarded
+  IF (SELECT xp_awarded FROM tasks WHERE id = _task_id) THEN
+    RAISE EXCEPTION 'XP already awarded for this task';
+  END IF;
+
+  -- Mark task as xp_awarded
+  UPDATE tasks SET xp_awarded = true, status = 'accepted' WHERE id = _task_id;
+
+  -- Upsert gamification
+  SELECT * INTO v_existing FROM user_gamification WHERE user_id = _submitter_id;
+
+  IF v_existing IS NULL THEN
+    INSERT INTO user_gamification (user_id, total_xp, level, current_streak, longest_streak, last_activity_date)
+    VALUES (_submitter_id, _xp_amount, GREATEST(1, _xp_amount / 100 + 1), 1, 1, v_today);
+  ELSE
+    v_new_xp := v_existing.total_xp + _xp_amount;
+    v_new_level := GREATEST(1, v_new_xp / 100 + 1);
+    
+    IF v_existing.last_activity_date = v_yesterday THEN
+      v_new_streak := v_existing.current_streak + 1;
+    ELSIF v_existing.last_activity_date = v_today THEN
+      v_new_streak := v_existing.current_streak;
+    ELSE
+      v_new_streak := 1;
+    END IF;
+
+    UPDATE user_gamification SET
+      total_xp = v_new_xp,
+      level = v_new_level,
+      current_streak = v_new_streak,
+      longest_streak = GREATEST(v_new_streak, v_existing.longest_streak),
+      last_activity_date = v_today
+    WHERE user_id = _submitter_id;
+  END IF;
+
+  -- Insert notification for the submitter
+  INSERT INTO notifications (user_id, type, title, body, link)
+  VALUES (
+    _submitter_id,
+    'task_approved',
+    'Your solution was accepted! +' || _xp_amount || ' XP',
+    'Your solution for a mission was approved.',
+    NULL
+  );
+
+  -- Check and award badges
+  DECLARE
+    v_tasks_completed bigint;
+    v_commits bigint;
+    v_prs bigint;
+    v_streak integer;
+  BEGIN
+    SELECT count(*) INTO v_tasks_completed FROM task_submissions WHERE submitter_id = _submitter_id AND status = 'accepted';
+    SELECT count(*) INTO v_commits FROM commits WHERE author_id = _submitter_id;
+    SELECT count(*) INTO v_prs FROM pull_requests WHERE author_id = _submitter_id;
+    SELECT COALESCE((SELECT current_streak FROM user_gamification WHERE user_id = _submitter_id), 0) INTO v_streak;
+
+    -- first_task
+    IF v_tasks_completed >= 1 AND NOT EXISTS (SELECT 1 FROM user_badges WHERE user_id = _submitter_id AND badge_type = 'first_task') THEN
+      INSERT INTO user_badges (user_id, badge_type, badge_name, badge_description) VALUES (_submitter_id, 'first_task', 'First Task', 'Completed your first task');
+    END IF;
+    -- five_tasks
+    IF v_tasks_completed >= 5 AND NOT EXISTS (SELECT 1 FROM user_badges WHERE user_id = _submitter_id AND badge_type = 'five_tasks') THEN
+      INSERT INTO user_badges (user_id, badge_type, badge_name, badge_description) VALUES (_submitter_id, 'five_tasks', 'Task Master', 'Completed 5 tasks');
+    END IF;
+    -- ten_tasks
+    IF v_tasks_completed >= 10 AND NOT EXISTS (SELECT 1 FROM user_badges WHERE user_id = _submitter_id AND badge_type = 'ten_tasks') THEN
+      INSERT INTO user_badges (user_id, badge_type, badge_name, badge_description) VALUES (_submitter_id, 'ten_tasks', 'Productivity Pro', 'Completed 10 tasks');
+    END IF;
+    -- streak_7
+    IF v_streak >= 7 AND NOT EXISTS (SELECT 1 FROM user_badges WHERE user_id = _submitter_id AND badge_type = 'streak_7') THEN
+      INSERT INTO user_badges (user_id, badge_type, badge_name, badge_description) VALUES (_submitter_id, 'streak_7', 'Week Warrior', '7-day activity streak');
+    END IF;
+    -- streak_30
+    IF v_streak >= 30 AND NOT EXISTS (SELECT 1 FROM user_badges WHERE user_id = _submitter_id AND badge_type = 'streak_30') THEN
+      INSERT INTO user_badges (user_id, badge_type, badge_name, badge_description) VALUES (_submitter_id, 'streak_30', 'Monthly Machine', '30-day activity streak');
+    END IF;
+  END;
+END;
+$$;

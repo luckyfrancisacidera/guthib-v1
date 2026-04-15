@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 25% 8%;
+    --foreground: 220 20% 97%;
+
+    --card: 230 25% 11%;
+    --card-foreground: 220 20% 97%;
+
+    --popover: 230 25% 11%;
+    --popover-foreground: 220 20% 97%;
+
+    --primary: 158 64% 52%;
+    --primary-foreground: 230 25% 8%;
+
+    --secondary: 230 20% 15%;
+    --secondary-foreground: 220 15% 80%;
+
+    --muted: 230 18% 18%;
+    --muted-foreground: 220 12% 55%;
+
+    --accent: 270 70% 65%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 18% 18%;
+    --input: 230 18% 20%;
+    --ring: 270 70% 65%;
+
+    --radius: 0.75rem;
+
+    --gh-dark-bg: 230 25% 8%;
+    --gh-dark-surface: 230 25% 11%;
+    --gh-green: 158 64% 52%;
+    --gh-purple: 270 70% 65%;
+    --gh-purple-glow: 270 70% 55%;
+    --gh-blue: 210 100% 66%;
+    --gh-orange: 25 95% 60%;
+    --gh-pink: 330 80% 65%;
+    --gh-yellow: 45 95% 60%;
+    --gh-text-primary: 220 20% 97%;
+    --gh-text-secondary: 220 12% 55%;
+    --gh-border: 230 18% 18%;
+
+    --sidebar-background: 230 25% 8%;
+    --sidebar-foreground: 220 20% 97%;
+    --sidebar-primary: 270 70% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 230 25% 15%;
+    --sidebar-accent-foreground: 220 20% 97%;
+    --sidebar-border: 230 18% 18%;
+    --sidebar-ring: 270 70% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gh-gradient-purple {
+    background: radial-gradient(ellipse at 50% 80%, hsl(270 70% 55% / 0.25) 0%, transparent 60%);
+  }
+
+  .gh-gradient-hero {
+    background: 
+      radial-gradient(ellipse at 30% 100%, hsl(158 64% 52% / 0.08) 0%, transparent 40%),
+      radial-gradient(ellipse at 70% 100%, hsl(270 70% 65% / 0.12) 0%, transparent 40%);
+  }
+
+  .gh-gradient-warm {
+    background: 
+      radial-gradient(ellipse at 50% 80%, hsl(25 95% 60% / 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, hsl(270 70% 65% / 0.06) 0%, transparent 40%);
+  }
+
+  .gh-glow {
+    box-shadow: 0 0 80px 20px hsl(270 70% 65% / 0.15);
+  }
+
+  .gh-section-border {
+    border-top: 1px solid hsl(230 18% 18%);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-float-delay {
+    animation: float 4s ease-in-out 1s infinite;
+  }
+
+  .animate-float-delay-2 {
+    animation: float 4s ease-in-out 2s infinite;
+  }
+}

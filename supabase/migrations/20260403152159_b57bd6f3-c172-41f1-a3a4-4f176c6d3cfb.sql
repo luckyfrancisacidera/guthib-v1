@@ -1,0 +1,1 @@
+ALTER TABLE public.user_gamification ADD COLUMN IF NOT EXISTS show_on_leaderboard boolean NOT NULL DEFAULT true;
